@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using ResearchArcade;
 
 public class AssignmentController : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class AssignmentController : MonoBehaviour
     int minFields=2;
     private Dictionary<E_AssignmentFields, S_AssignmentFieldData> assignmentFieldToFieldDataMap;
     private List<S_Assignment> assmtQ;
+    private int activeAssignmentIndex;
 
     // Start is called before the first frame update
     void Start()
@@ -34,7 +36,9 @@ public class AssignmentController : MonoBehaviour
         {
             assignmentFieldToFieldDataMap[fieldDatum.field] = fieldDatum;
         }
-        //Debug.Log("field data map count: " + assignmentFieldToFieldDataMap.Count);
+        
+        activeAssignmentIndex = 0;
+        ChangeActiveAssmt();
 
         //InvokeRepeating("SpawnAssignment", 3f, 5f);
         StartCoroutine(SpawnAssignmentRepeatedly());
@@ -44,7 +48,10 @@ public class AssignmentController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (ArcadeInput.Player1.A.Down)
+        {
+            ChangeActiveAssmt();
+        }
     }
 
     private IEnumerator SpawnAssignmentRepeatedly()
@@ -109,11 +116,51 @@ public class AssignmentController : MonoBehaviour
         {
             var currentAssmt = assmtQ[i];
             currentAssmt.timeRemaining -= 1;
-
             //Debug.Log("i: "+i+" | "+currentAssmt.timeRemaining);
+            assmtQ[i] = currentAssmt;
+            assmtSlots[i].UpdateUI(currentAssmt);
+        }
+    }
+
+    public void UpdateAssmtUI()
+    {
+        for (int i = 0; i < assmtQ.Count; i++)
+        {
+            var currentAssmt = assmtQ[i];
             assmtSlots[i].UpdateUI(currentAssmt);
 
-            assmtQ[i] = currentAssmt;
+            if (i==activeAssignmentIndex)
+            {
+                assmtSlots[i].SetActiveSlot();
+            } else
+            {
+                assmtSlots[i].SetInactiveSlot();
+            }
         }
+    }
+
+    public S_Assignment GetActiveAssmt()
+    {
+        return assmtQ[activeAssignmentIndex];
+    }
+
+    public void SetActiveAssmt(S_Assignment assignment)
+    {
+        assmtQ[activeAssignmentIndex] = assignment;
+        assmtSlots[activeAssignmentIndex].UpdateUI(assignment);
+    }
+
+    public void ChangeActiveAssmt()
+    {
+        if  (++activeAssignmentIndex >= assmtQ.Count)
+        {
+            activeAssignmentIndex = 0;
+        }
+
+        for (int i = 0; i < assmtQ.Count; i++)
+        {
+            assmtSlots[i].SetInactiveSlot();
+        }
+        assmtSlots[activeAssignmentIndex].SetActiveSlot();
     }
 }

@@ -10,7 +10,7 @@ public class AssmtSlot : MonoBehaviour
     TextMeshProUGUI timerText;
 
     [SerializeField]
-    GameObject fieldsPanel, timerPanel, fieldTextSlot;
+    GameObject fieldsPanel, timerPanel, fieldTextSlot, activeSlotIndicator;
 
     // Start is called before the first frame update
     void Start()
@@ -21,6 +21,7 @@ public class AssmtSlot : MonoBehaviour
         GetComponent<Image>().enabled = false;
         fieldsPanel.SetActive(false);
         timerPanel.SetActive(false);
+        activeSlotIndicator.SetActive(false);
     }
 
     // Update is called once per frame
@@ -55,5 +56,15 @@ public class AssmtSlot : MonoBehaviour
             var assmtField = assignment.fields[i];
             fieldTextSlots[i].text = string.Format("{0} {1}/{2}", assmtField.field, assmtField.currentValue, assmtField.targetValue);
         }
+    }
+
+    public void SetActiveSlot()
+    {
+        activeSlotIndicator.SetActive(true);
+    }
+
+    public void SetInactiveSlot()
+    {
+        activeSlotIndicator.SetActive(false);
     }
 }
