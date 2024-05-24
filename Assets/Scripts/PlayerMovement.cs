@@ -79,7 +79,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void MoveInDirection(Vector2 direction)
     {
-        Debug.Log("Moving " + direction);
+        //Debug.Log("Moving " + direction);
         rb.velocity = direction * movementSpeed * Time.fixedDeltaTime;
     }
 

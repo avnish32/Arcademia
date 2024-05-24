@@ -56,22 +56,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: ReportPgsPickup
       objectReference: {fileID: 0}
-    - target: {fileID: 7127423255645416523, guid: 791f4a2e7fd70464699d05a15abba09e, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7127423255645416523, guid: 791f4a2e7fd70464699d05a15abba09e, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7127423255645416523, guid: 791f4a2e7fd70464699d05a15abba09e, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7127423255645416523, guid: 791f4a2e7fd70464699d05a15abba09e, type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8665188066052502722, guid: 791f4a2e7fd70464699d05a15abba09e, type: 3}
       propertyPath: field
       value: 1

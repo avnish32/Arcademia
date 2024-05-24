@@ -13,7 +13,7 @@ public class AssmtPickup : Pickable
     TextMeshProUGUI pickupValueText;
 
     private int pickupValue; 
-    private float maxLifetimeSecs=100f;
+    private float maxLifetimeSecs=10f;
 
     // Start is called before the first frame update
     void Start()
