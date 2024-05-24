@@ -53,7 +53,7 @@ public class AssignmentController : MonoBehaviour
         {
             S_Assignment spawnedAssmt = SpawnAssignment();
             assmtQ.Add(spawnedAssmt);
-            assmtSlots[assmtQ.Count-1].EnableSlot(spawnedAssmt);
+            assmtSlots[assmtQ.Count-1].InitSlot(spawnedAssmt);
 
             yield return new WaitForSeconds(UnityEngine.Random.Range(minSpawnInterval, maxSpawnInterval + 1));
         }
@@ -110,8 +110,10 @@ public class AssignmentController : MonoBehaviour
             var currentAssmt = assmtQ[i];
             currentAssmt.timeRemaining -= 1;
 
-            Debug.Log("i: "+i+" | "+currentAssmt.timeRemaining);
+            //Debug.Log("i: "+i+" | "+currentAssmt.timeRemaining);
             assmtSlots[i].UpdateUI(currentAssmt);
+
+            assmtQ[i] = currentAssmt;
         }
     }
 }

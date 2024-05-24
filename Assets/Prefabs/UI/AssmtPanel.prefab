@@ -92,7 +92,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timerText: {fileID: 1264367038480360764}
   fieldsPanel: {fileID: 3706825319776083235}
-  fieldTextSlot: {fileID: 0}
+  timerPanel: {fileID: 5287789127531390055}
+  fieldTextSlot: {fileID: 8203721130730544653, guid: d7001f262298e1e48b72d7e4797fc159, type: 3}
 --- !u!1 &3706825319776083235
 GameObject:
   m_ObjectHideFlags: 0
