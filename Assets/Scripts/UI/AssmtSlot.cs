@@ -13,11 +13,22 @@ public class AssmtSlot : MonoBehaviour
     GameObject fieldsPanel, timerPanel, fieldTextSlot, activeSlotIndicator;
 
     [SerializeField]
-    TextMeshProUGUI[] fieldTextSlots;
+    AssmtFieldSlot[] fieldSlots;
+
+    [SerializeField]
+    S_FieldIconData[] fieldIconData;
+
+    private Dictionary<E_AssignmentFields, Sprite> fieldToIconMap;
 
     // Start is called before the first frame update
     void Start()
     {
+        fieldToIconMap = new Dictionary<E_AssignmentFields, Sprite>();
+        foreach (var fieldIconDatum in fieldIconData)
+        {
+            fieldToIconMap[fieldIconDatum.field] = fieldIconDatum.fieldIcon;
+        }
+
         this.enabled = true;
         this.gameObject.SetActive(true);
         
@@ -26,9 +37,9 @@ public class AssmtSlot : MonoBehaviour
         timerPanel.SetActive(false);
         activeSlotIndicator.SetActive(false);
 
-        foreach (var fieldTextSlot in fieldTextSlots)
+        foreach (var fieldSlot in fieldSlots)
         {
-            fieldTextSlot.enabled = false;
+            fieldSlot.gameObject.SetActive(false);
         }
     }
 
@@ -48,7 +59,7 @@ public class AssmtSlot : MonoBehaviour
         //Debug.Log("no. of fields before making field text slots: " + assignment.fields.Count);
         for (int i = 0; i<assignment.fields.Count; i++)
         {
-            fieldTextSlots[i].enabled = true;
+            fieldSlots[i].gameObject.SetActive(true);
         }
 
         UpdateUI(assignment);
@@ -56,10 +67,10 @@ public class AssmtSlot : MonoBehaviour
 
     public void RemoveSlot()
     {
-        var fieldTextSlots = fieldsPanel.GetComponentsInChildren<TextMeshProUGUI>();
-        foreach (var fieldTextSlot in fieldTextSlots)
+        var fieldSlots = fieldsPanel.GetComponentsInChildren<AssmtFieldSlot>();
+        foreach (var fieldSlot in fieldSlots)
         {
-            fieldTextSlot.enabled = false;
+            fieldSlot.gameObject.SetActive(false);
         }
         fieldsPanel.SetActive(false);
         timerPanel.SetActive(false);
@@ -81,7 +92,9 @@ public class AssmtSlot : MonoBehaviour
         for (int i = 0; i < assignment.fields.Count; i++)
         {
             var assmtField = assignment.fields[i];
-            fieldTextSlots[i].text = string.Format("{0} {1}/{2}", assmtField.field, assmtField.currentValue, assmtField.targetValue);
+            fieldSlots[i].fieldIcon.sprite = fieldToIconMap[assmtField.field];
+
+            fieldSlots[i].fieldValText.text = string.Format("{0}/{1}", assmtField.currentValue, assmtField.targetValue);
             Color fieldTextColor = Color.red;
 
             if (assmtField.currentValue >= assmtField.targetValue)
@@ -101,7 +114,7 @@ public class AssmtSlot : MonoBehaviour
                 }
             }
             
-            fieldTextSlots[i].color = fieldTextColor;
+            fieldSlots[i].fieldValText.color = fieldTextColor;
         }
     }
 
