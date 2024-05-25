@@ -35,14 +35,14 @@ public class AssignmentController : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log("Inside awake of Assmt controller.");
+        //Debug.Log("Inside awake of Assmt controller.");
         gameStateController = FindObjectOfType<GameStateController>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("Inside start of Assmt controller.");
+        //Debug.Log("Inside start of Assmt controller.");
         assmtQ = new List<S_Assignment>();
 
         assignmentFieldToFieldDataMap = new Dictionary<E_AssignmentFields, S_AssignmentFieldData>();
@@ -78,6 +78,9 @@ public class AssignmentController : MonoBehaviour
     {
         currentWave++;
         assmtsSpawnedInCurrentWave = 0;
+        minAssmtSecsPerTarget = (int)assmtWaveToWaveDataMap[currentWave].minAssmtSecsPerTarget;
+        maxAssmtSecsPerTarget = (int)assmtWaveToWaveDataMap[currentWave].maxAssmtSecsPerTarget;
+
         SpawnAssmtAndUpdateUI();
         UpdateAssmtUI();
         StartCoroutine(SpawnAssignmentRepeatedly());
@@ -102,6 +105,12 @@ public class AssignmentController : MonoBehaviour
         S_Assignment spawnedAssmt = SpawnAssignment();
         assmtQ.Add(spawnedAssmt);
         assmtSlots[assmtQ.Count - 1].InitSlot(spawnedAssmt);
+
+        if (assmtQ.Count == 1)
+        {
+            activeAssignmentIndex = 0;
+            assmtSlots[assmtQ.Count - 1].SetActiveSlot();
+        }
     }
 
     private S_Assignment SpawnAssignment()
