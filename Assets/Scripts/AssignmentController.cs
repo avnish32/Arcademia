@@ -35,12 +35,14 @@ public class AssignmentController : MonoBehaviour
 
     private void Awake()
     {
+        Debug.Log("Inside awake of Assmt controller.");
         gameStateController = FindObjectOfType<GameStateController>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log("Inside start of Assmt controller.");
         assmtQ = new List<S_Assignment>();
 
         assignmentFieldToFieldDataMap = new Dictionary<E_AssignmentFields, S_AssignmentFieldData>();

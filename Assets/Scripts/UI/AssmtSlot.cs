@@ -20,9 +20,9 @@ public class AssmtSlot : MonoBehaviour
 
     private Dictionary<E_AssignmentFields, Sprite> fieldToIconMap;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
+        Debug.Log("Inside awake of Assmt slot.");
         fieldToIconMap = new Dictionary<E_AssignmentFields, Sprite>();
         foreach (var fieldIconDatum in fieldIconData)
         {
@@ -31,7 +31,7 @@ public class AssmtSlot : MonoBehaviour
 
         this.enabled = true;
         this.gameObject.SetActive(true);
-        
+
         GetComponent<Image>().enabled = false;
         fieldsPanel.SetActive(false);
         timerPanel.SetActive(false);
@@ -41,6 +41,12 @@ public class AssmtSlot : MonoBehaviour
         {
             fieldSlot.gameObject.SetActive(false);
         }
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        Debug.Log("Inside start of Assmt slot.");
     }
 
     // Update is called once per frame
@@ -100,6 +106,7 @@ public class AssmtSlot : MonoBehaviour
         for (int i = 0; i < assignment.fields.Count; i++)
         {
             var assmtField = assignment.fields[i];
+
             fieldSlots[i].fieldIcon.sprite = fieldToIconMap[assmtField.field];
 
             fieldSlots[i].fieldValText.text = string.Format("{0}/{1}", assmtField.currentValue, assmtField.targetValue);
