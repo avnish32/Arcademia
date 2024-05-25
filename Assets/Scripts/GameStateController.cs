@@ -1,0 +1,69 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class GameStateController : MonoBehaviour
+{
+    [SerializeField]
+    GameObject[] lifeIcons;
+
+    [SerializeField]
+    GameObject losePanel;
+    
+    private int livesLeft = 3, maxLives = 5;
+    public bool isGamePaused = false;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        losePanel.SetActive(false);
+        int i;
+        for (i = 0; i < livesLeft; i++)
+        {
+            lifeIcons[i].SetActive(true);
+        }
+        for (; i<lifeIcons.Length; i++)
+        {
+            lifeIcons[i].SetActive(false);
+        }
+        ResumeGame();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    private void PauseGame()
+    {
+        Time.timeScale = 0f;
+        isGamePaused = true;
+    }
+
+    private void ResumeGame()
+    {
+        Time.timeScale = 1f;
+        isGamePaused = false;
+    }
+
+    public void ReduceLife()
+    {
+        livesLeft = Mathf.Clamp(--livesLeft, 0, maxLives);
+
+        if(livesLeft <=0)
+        {
+            PauseGame();
+            losePanel.SetActive(true);
+        }
+        lifeIcons[livesLeft].gameObject.SetActive(false);
+    }
+
+    public void AddLife()
+    {
+        livesLeft = Mathf.Clamp(++livesLeft, 0, maxLives);
+        lifeIcons[livesLeft-1].gameObject.SetActive(true);
+    }
+
+
+}

@@ -23,14 +23,14 @@ public class AssignmentController : MonoBehaviour
 
     int minFields=2;
     private Dictionary<E_AssignmentFields, S_AssignmentFieldData> assignmentFieldToFieldDataMap;
-    public List<S_Assignment> assmtQ;
+    private List<S_Assignment> assmtQ;
     private int activeAssignmentIndex;
-    private PlayerStatsController playerStatsController;
+    private GameStateController playerStatsController;
     private bool areAssmtsBeingSpawned = true;
 
     private void Awake()
     {
-        playerStatsController = FindObjectOfType<PlayerStatsController>();
+        playerStatsController = FindObjectOfType<GameStateController>();
     }
 
     // Start is called before the first frame update

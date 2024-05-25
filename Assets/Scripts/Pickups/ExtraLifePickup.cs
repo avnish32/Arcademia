@@ -20,7 +20,7 @@ public class ExtraLifePickup : Pickable
 
     public override void Pick()
     {
-        PlayerStatsController playerStatsController = FindObjectOfType<PlayerStatsController>();
+        GameStateController playerStatsController = FindObjectOfType<GameStateController>();
         playerStatsController.AddLife();
         
         Destroy(gameObject);
