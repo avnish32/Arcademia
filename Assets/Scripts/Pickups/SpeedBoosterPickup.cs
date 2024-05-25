@@ -9,7 +9,8 @@ public class SpeedBoosterPickup : Pickable
     // Start is called before the first frame update
     void Start()
     {
-        Destroy(gameObject, maxLifetimeSecs);
+        StartCoroutine(DestroyAfterLifetime());
+        //Destroy(gameObject, maxLifetimeSecs);
     }
 
     // Update is called once per frame
@@ -18,11 +19,22 @@ public class SpeedBoosterPickup : Pickable
         
     }
 
+    private IEnumerator DestroyAfterLifetime()
+    {
+        yield return new WaitForSeconds(maxLifetimeSecs);
+        GetComponent<Animator>().Play("Destroy");
+    }
+
     public override void Pick()
     {
         PlayerMovement playerMovement = FindObjectOfType<PlayerMovement>();
         playerMovement.OnSpeedBoosterPickup();
 
+        Destroy(gameObject);
+    }
+
+    public void DestroyPickup()
+    {
         Destroy(gameObject);
     }
 }

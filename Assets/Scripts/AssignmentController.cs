@@ -77,6 +77,7 @@ public class AssignmentController : MonoBehaviour
         currentWave++;
         assmtsSpawnedInCurrentWave = 0;
         SpawnAssmtAndUpdateUI();
+        UpdateAssmtUI();
         StartCoroutine(SpawnAssignmentRepeatedly());
     }
     private IEnumerator SpawnAssignmentRepeatedly()

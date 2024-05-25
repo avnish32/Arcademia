@@ -9,13 +9,20 @@ public class AssessmentCompleterPickup : Pickable
     // Start is called before the first frame update
     void Start()
     {
-        Destroy(gameObject, maxLifetimeSecs);
+        //Destroy(gameObject, maxLifetimeSecs);
+        StartCoroutine(DestroyAfterLifetime());
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    private IEnumerator DestroyAfterLifetime()
+    {
+        yield return new WaitForSeconds(maxLifetimeSecs);
+        GetComponent<Animator>().Play("Destroy");
     }
 
     public override void Pick()
@@ -30,6 +37,11 @@ public class AssessmentCompleterPickup : Pickable
         }
         assignmentController.SetActiveAssmt(activeAssmt);
 
+        Destroy(gameObject);
+    }
+
+    public void DestroyPickup()
+    {
         Destroy(gameObject);
     }
 }

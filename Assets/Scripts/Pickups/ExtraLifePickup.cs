@@ -9,7 +9,7 @@ public class ExtraLifePickup : Pickable
     // Start is called before the first frame update
     void Start()
     {
-        Destroy(gameObject, maxLifetimeSecs);
+        StartCoroutine(DestroyAfterLifetime());
     }
 
     // Update is called once per frame
@@ -18,11 +18,22 @@ public class ExtraLifePickup : Pickable
         
     }
 
+    private IEnumerator DestroyAfterLifetime()
+    {
+        yield return new WaitForSeconds(maxLifetimeSecs);
+        GetComponent<Animator>().Play("Destroy");
+    }
+
     public override void Pick()
     {
         GameStateController playerStatsController = FindObjectOfType<GameStateController>();
         playerStatsController.AddLife();
         
+        Destroy(gameObject);
+    }
+
+    public void DestroyPickup()
+    {
         Destroy(gameObject);
     }
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using ResearchArcade;
 
 public class SceneController : MonoBehaviour
 {
@@ -20,6 +21,21 @@ public class SceneController : MonoBehaviour
     public void LoadSameScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void LoadMainScene()
+    {
+        SceneManager.LoadScene("MainScene");
+    }
+
+    public void LoadMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    public void QuitGame()
+    {
+        ResearchArcade.Navigation.ExitGame();
     }
 
 

@@ -23,7 +23,14 @@ public class AssmtPickup : Pickable
 
         maxLifetimeSecs = maxLifetimeSecs * (1f / pickupValue);
 
-        Destroy(gameObject, maxLifetimeSecs);
+        //Destroy(gameObject, maxLifetimeSecs);
+        StartCoroutine(DestroyAfterLifetime());
+    }
+
+    private IEnumerator DestroyAfterLifetime()
+    {
+        yield return new WaitForSeconds(maxLifetimeSecs);
+        GetComponent<Animator>().Play("Destroy");
     }
 
     public override void Pick()
@@ -44,6 +51,11 @@ public class AssmtPickup : Pickable
         }
 
         assignmentController.SetActiveAssmt(activeAssmt);
+        Destroy(gameObject);
+    }
+
+    public void DestroyPickup()
+    {
         Destroy(gameObject);
     }
 

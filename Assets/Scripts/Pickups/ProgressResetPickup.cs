@@ -9,13 +9,20 @@ public class ProgressResetPickup : Pickable
     // Start is called before the first frame update
     void Start()
     {
-        Destroy(gameObject, maxLifetimeSecs);
+        StartCoroutine(DestroyAfterLifetime());
+        //Destroy(gameObject, maxLifetimeSecs);
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    private IEnumerator DestroyAfterLifetime()
+    {
+        yield return new WaitForSeconds(maxLifetimeSecs);
+        GetComponent<Animator>().Play("Destroy");
     }
 
     public override void Pick()
@@ -30,6 +37,11 @@ public class ProgressResetPickup : Pickable
         }
         assignmentController.SetActiveAssmt(activeAssmt);
 
+        Destroy(gameObject);
+    }
+
+    public void DestroyPickup()
+    {
         Destroy(gameObject);
     }
 }
