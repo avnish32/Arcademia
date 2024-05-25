@@ -23,8 +23,15 @@ public class AssignmentController : MonoBehaviour
 
     int minFields=2;
     private Dictionary<E_AssignmentFields, S_AssignmentFieldData> assignmentFieldToFieldDataMap;
-    private List<S_Assignment> assmtQ;
+    public List<S_Assignment> assmtQ;
     private int activeAssignmentIndex;
+    private PlayerStatsController playerStatsController;
+    private bool areAssmtsBeingSpawned = true;
+
+    private void Awake()
+    {
+        playerStatsController = FindObjectOfType<PlayerStatsController>();
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -41,6 +48,7 @@ public class AssignmentController : MonoBehaviour
         ChangeActiveAssmt();
 
         //InvokeRepeating("SpawnAssignment", 3f, 5f);
+        SpawnAssmtAndUpdateUI();
         StartCoroutine(SpawnAssignmentRepeatedly());
         InvokeRepeating("UpdateAssmtTimers", 0f, 1f);
     }
@@ -56,14 +64,20 @@ public class AssignmentController : MonoBehaviour
 
     private IEnumerator SpawnAssignmentRepeatedly()
     {
+        areAssmtsBeingSpawned = true;
         while (assmtQ.Count < activeAssmtQSize)
         {
-            S_Assignment spawnedAssmt = SpawnAssignment();
-            assmtQ.Add(spawnedAssmt);
-            assmtSlots[assmtQ.Count-1].InitSlot(spawnedAssmt);
-
             yield return new WaitForSeconds(UnityEngine.Random.Range(minSpawnInterval, maxSpawnInterval + 1));
+            SpawnAssmtAndUpdateUI();
         }
+        areAssmtsBeingSpawned = false;
+    }
+
+    private void SpawnAssmtAndUpdateUI()
+    {
+        S_Assignment spawnedAssmt = SpawnAssignment();
+        assmtQ.Add(spawnedAssmt);
+        assmtSlots[assmtQ.Count - 1].InitSlot(spawnedAssmt);
     }
 
     private S_Assignment SpawnAssignment()
@@ -89,7 +103,7 @@ public class AssignmentController : MonoBehaviour
         assignment.fields = assignmentFields;
         assignment.timeRemaining = UnityEngine.Random.Range(minAssmtLifetime, maxAssmtLifetime + 1);
 
-        DisplayAssignmentData(assignment);
+        //DisplayAssignmentData(assignment);
         return assignment;
     }
 
@@ -119,15 +133,46 @@ public class AssignmentController : MonoBehaviour
             //Debug.Log("i: "+i+" | "+currentAssmt.timeRemaining);
             assmtQ[i] = currentAssmt;
             assmtSlots[i].UpdateUI(currentAssmt);
+
+            if (currentAssmt.timeRemaining <= 0)
+            {
+                RemoveAssmt(currentAssmt);
+                playerStatsController.ReduceLife();
+            }
         }
+    }
+
+    private void RemoveAssmt(S_Assignment assignment)
+    {
+        assmtQ.Remove(assignment);
+        activeAssignmentIndex = Mathf.Clamp(--activeAssignmentIndex, 0, assmtQ.Count - 1);
+        UpdateAssmtUI();
+        if (!areAssmtsBeingSpawned)
+        {
+            StartCoroutine(SpawnAssignmentRepeatedly());
+        }
+    }
+
+    private bool IsAssmtCompleted(S_Assignment assignment)
+    {
+        foreach (var field in assignment.fields)
+        {
+            if (field.currentValue < field.targetValue)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void UpdateAssmtUI()
     {
-        for (int i = 0; i < assmtQ.Count; i++)
+        int i;
+        for (i = 0; i < assmtQ.Count; i++)
         {
+            assmtSlots[i].RemoveSlot();
             var currentAssmt = assmtQ[i];
-            assmtSlots[i].UpdateUI(currentAssmt);
+            assmtSlots[i].InitSlot(currentAssmt);
 
             if (i==activeAssignmentIndex)
             {
@@ -136,6 +181,12 @@ public class AssignmentController : MonoBehaviour
             {
                 assmtSlots[i].SetInactiveSlot();
             }
+        }
+
+        for (; i<assmtSlots.Count; i++)
+        {
+            assmtSlots[i].RemoveSlot();
+            assmtSlots[i].SetInactiveSlot();
         }
     }
 
@@ -147,7 +198,15 @@ public class AssignmentController : MonoBehaviour
     public void SetActiveAssmt(S_Assignment assignment)
     {
         assmtQ[activeAssignmentIndex] = assignment;
-        assmtSlots[activeAssignmentIndex].UpdateUI(assignment);
+        
+        if (IsAssmtCompleted(assignment))
+        {
+            //change here for submission desk
+            RemoveAssmt(assignment);
+        } else
+        {
+            assmtSlots[activeAssignmentIndex].UpdateUI(assignment);
+        }
     }
 
     public void ChangeActiveAssmt()

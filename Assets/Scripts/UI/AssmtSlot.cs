@@ -12,6 +12,9 @@ public class AssmtSlot : MonoBehaviour
     [SerializeField]
     GameObject fieldsPanel, timerPanel, fieldTextSlot, activeSlotIndicator;
 
+    [SerializeField]
+    TextMeshProUGUI[] fieldTextSlots;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -22,6 +25,11 @@ public class AssmtSlot : MonoBehaviour
         fieldsPanel.SetActive(false);
         timerPanel.SetActive(false);
         activeSlotIndicator.SetActive(false);
+
+        foreach (var fieldTextSlot in fieldTextSlots)
+        {
+            fieldTextSlot.enabled = false;
+        }
     }
 
     // Update is called once per frame
@@ -37,24 +45,60 @@ public class AssmtSlot : MonoBehaviour
         fieldsPanel.SetActive(true);
         timerPanel.SetActive(true);
 
-        foreach (var field in assignment.fields)
+        //Debug.Log("no. of fields before making field text slots: " + assignment.fields.Count);
+        for (int i = 0; i<assignment.fields.Count; i++)
         {
-            var newFieldTextSlot = Instantiate(fieldTextSlot);
-            newFieldTextSlot.transform.SetParent(fieldsPanel.transform);
+            fieldTextSlots[i].enabled = true;
         }
 
         UpdateUI(assignment);
     }
 
+    public void RemoveSlot()
+    {
+        var fieldTextSlots = fieldsPanel.GetComponentsInChildren<TextMeshProUGUI>();
+        foreach (var fieldTextSlot in fieldTextSlots)
+        {
+            fieldTextSlot.enabled = false;
+        }
+        fieldsPanel.SetActive(false);
+        timerPanel.SetActive(false);
+        GetComponent<Image>().enabled = false;
+
+        //Debug.Log("After destroying, tmpro under field panel: " + fieldsPanel.GetComponentsInChildren<TextMeshProUGUI>().Length);
+    }
+
     public void UpdateUI(S_Assignment assignment)
     {
         timerText.text = "0:" + assignment.timeRemaining;
+        
+        //var fieldTextSlots = fieldsPanel.GetComponentsInChildren<TextMeshProUGUI>();
+        //Debug.Log("Updating slot UI, field text slots count: " + fieldTextSlots.Length+" | assignment field count: "+ assignment.fields.Count);
 
-        var fieldTextSlots = fieldsPanel.GetComponentsInChildren<TextMeshProUGUI>();
-        for (int i = 0; i < fieldTextSlots.Length; i++)
+        for (int i = 0; i < assignment.fields.Count; i++)
         {
             var assmtField = assignment.fields[i];
             fieldTextSlots[i].text = string.Format("{0} {1}/{2}", assmtField.field, assmtField.currentValue, assmtField.targetValue);
+            Color fieldTextColor = Color.red;
+
+            if (assmtField.currentValue >= assmtField.targetValue)
+            {
+                fieldTextColor = Color.green;
+            } else
+            {
+                float ratio = (float)assmtField.currentValue / (float)assmtField.targetValue;
+                //Debug.Log("Ratio: " + ratio);
+                if (ratio > 0.5)
+                {
+                    fieldTextColor = Color.yellow;
+                } else if (ratio > 0)
+                {
+                    fieldTextColor = new Color32(255, 90, 0, 255);
+                    
+                }
+            }
+            
+            fieldTextSlots[i].color = fieldTextColor;
         }
     }
 

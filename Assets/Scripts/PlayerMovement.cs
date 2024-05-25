@@ -11,6 +11,7 @@ public class PlayerMovement : MonoBehaviour
 
     private Rigidbody2D rb;
     private Vector2 movementInput;
+    private float speedModifier = 1f;
 
     private void Awake()
     {
@@ -80,7 +81,7 @@ public class PlayerMovement : MonoBehaviour
     private void MoveInDirection(Vector2 direction)
     {
         //Debug.Log("Moving " + direction);
-        rb.velocity = direction * movementSpeed * Time.fixedDeltaTime;
+        rb.velocity = direction * movementSpeed * Time.fixedDeltaTime * speedModifier;
     }
 
     private void StopMoving()
@@ -88,9 +89,38 @@ public class PlayerMovement : MonoBehaviour
         rb.velocity = Vector2.zero;
     }
 
+    private IEnumerator SlowDownTemporarily()
+    {
+        SetSpeedModifier(0.5f);
+        yield return new WaitForSeconds(5f);
+        SetSpeedModifier(1f);
+    }
+
+    private IEnumerator SpeedUpTemporarily()
+    {
+        SetSpeedModifier(1.5f);
+        yield return new WaitForSeconds(5f);
+        SetSpeedModifier(1f);
+    }
+
     void OnMove(InputValue inputValue)
     {
         movementInput = inputValue.Get<Vector2>();
         //Debug.Log("Movement input: " + movementInput);
+    }
+
+    public void SetSpeedModifier(float speedModifier)
+    {
+        this.speedModifier = speedModifier;
+    }
+
+    public void OnSpeedReducerPickup()
+    {
+        StartCoroutine(SlowDownTemporarily());
+    }
+
+    public void OnSpeedBoosterPickup()
+    {
+        StartCoroutine(SpeedUpTemporarily());
     }
 }

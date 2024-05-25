@@ -11,7 +11,10 @@ public class PickupSpawner : MonoBehaviour
     float minSpawnDelay, maxSpawnDelay;
 
     [SerializeField]
-    GameObject[] pickups;
+    float assmtPickupProb, powerupProb, enemiesProb;
+
+    [SerializeField]
+    GameObject[] assmtPickups, powerups, enemies;
 
     // Start is called before the first frame update
     void Start()
@@ -33,7 +36,17 @@ public class PickupSpawner : MonoBehaviour
             PickupSpawnPt randomSpawnPt = spawnPts[UnityEngine.Random.Range(0, spawnPts.Length)];
             if (randomSpawnPt.CanSpawn())
             {
-                randomSpawnPt.SpawnPickup(pickups[UnityEngine.Random.Range(0, pickups.Length)]);
+                float prob = UnityEngine.Random.Range(0f, 1f);
+                if (prob <= assmtPickupProb)
+                {
+                    randomSpawnPt.SpawnPickup(assmtPickups[UnityEngine.Random.Range(0, assmtPickups.Length)]);
+                } else if (prob <= assmtPickupProb+powerupProb)
+                {
+                    randomSpawnPt.SpawnPickup(powerups[UnityEngine.Random.Range(0, powerups.Length)]);
+                } else
+                {
+                    randomSpawnPt.SpawnPickup(enemies[UnityEngine.Random.Range(0, enemies.Length)]);
+                }   
             }
         }
     }

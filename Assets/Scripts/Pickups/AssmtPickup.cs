@@ -37,6 +37,7 @@ public class AssmtPickup : Pickable
             if (currentField.field == pickupField)
             {
                 currentField.currentValue += pickupValue;
+                currentField.currentValue = Mathf.Clamp(currentField.currentValue, 0, currentField.targetValue);
                 activeAssmt.fields[i] = currentField;
                 break;
             }

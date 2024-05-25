@@ -5,6 +5,12 @@ using UnityEngine;
 public class PickupSpawnPt : MonoBehaviour
 {
     private GameObject pickupAtThisPt;
+    private PlayerMovement player;
+
+    private void Awake()
+    {
+        player = FindObjectOfType<PlayerMovement>();
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -20,13 +26,14 @@ public class PickupSpawnPt : MonoBehaviour
 
     public void SpawnPickup(GameObject pickup)
     {
-        Debug.Log("Pickup spawned.");
+        //Debug.Log("Pickup spawned.");
         pickupAtThisPt = Instantiate(pickup, transform.position, Quaternion.identity);
     }
 
     public bool CanSpawn()
     {
-        return pickupAtThisPt == null;
+        float distanceFromPlayer = Vector2.Distance(player.transform.position, transform.position);
+        return pickupAtThisPt == null && distanceFromPlayer > 0.7f;
     }
 
 }
