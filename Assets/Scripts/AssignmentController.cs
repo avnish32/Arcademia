@@ -284,6 +284,16 @@ public class AssignmentController : MonoBehaviour
         }
     }
 
+    private int CalculateAssmtScore(S_Assignment assignment)
+    {
+        int score = 0;
+        foreach(var field in assignment.fields)
+        {
+            score += field.currentValue;
+        }
+        return score;
+    }
+
     public void ChangeActiveAssmt()
     {
         if  (++activeAssignmentIndex >= assmtQ.Count)
@@ -310,6 +320,7 @@ public class AssignmentController : MonoBehaviour
             if (IsAssmtCompleted(assmtQ[i]))
             {
                 audioSource.PlayOneShot(assmtSubmittedClip);
+                gameStateController.UpdateScore(CalculateAssmtScore(assmtQ[i]));
                 RemoveAssmt(assmtQ[i]);
                 CheckForWaveEnd();
             }

@@ -12,20 +12,22 @@ public class GameStateController : MonoBehaviour
     GameObject losePanel, waveClearPanel, winPanel, pausePanel;
 
     [SerializeField]
-    TextMeshProUGUI waveClearMsg;
+    TextMeshProUGUI waveClearMsg, scoreText;
 
     [SerializeField]
     AudioSource audioSource;
 
     [SerializeField]
     AudioClip lostClip;
-    
-    private int livesLeft = 3, maxLives = 5;
+
+    private int livesLeft = 3, maxLives = 5, score = 0;
     public bool isGamePaused = false;
+
 
     // Start is called before the first frame update
     void Start()
     {
+        scoreText.text = score.ToString("00000");
         losePanel.SetActive(false);
         winPanel.SetActive(false);
         waveClearPanel.SetActive(false);
@@ -109,6 +111,12 @@ public class GameStateController : MonoBehaviour
     {
         pausePanel.SetActive(false);
         ResumeGame();        
+    }
+
+    public void UpdateScore(int scoreToAdd)
+    {
+        score += scoreToAdd;
+        scoreText.text = score.ToString("00000");
     }
 
     /*public void OnGoingBackFromSubmission()
