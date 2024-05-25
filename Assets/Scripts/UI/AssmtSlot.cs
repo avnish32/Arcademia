@@ -85,6 +85,14 @@ public class AssmtSlot : MonoBehaviour
         int secsLeft = assignment.timeRemaining % 60;
         
         timerText.text = string.Format("{0}:{1}", minsLeft.ToString("00"), secsLeft.ToString("00"));
+        if (assignment.timeRemaining < 5)
+        {
+            GetComponent<Image>().color = new Color32(255, 120, 94, 255);
+        }
+        else if (assignment.timeRemaining < 10)
+        {
+            GetComponent<Image>().color = new Color32(255, 168, 94, 255);
+        }
         
         //var fieldTextSlots = fieldsPanel.GetComponentsInChildren<TextMeshProUGUI>();
         //Debug.Log("Updating slot UI, field text slots count: " + fieldTextSlots.Length+" | assignment field count: "+ assignment.fields.Count);
@@ -95,21 +103,21 @@ public class AssmtSlot : MonoBehaviour
             fieldSlots[i].fieldIcon.sprite = fieldToIconMap[assmtField.field];
 
             fieldSlots[i].fieldValText.text = string.Format("{0}/{1}", assmtField.currentValue, assmtField.targetValue);
-            Color fieldTextColor = Color.red;
+            Color fieldTextColor = new Color32(67, 0, 0, 255);
 
             if (assmtField.currentValue >= assmtField.targetValue)
             {
-                fieldTextColor = Color.green;
+                fieldTextColor = new Color32(0, 67, 0, 255);
             } else
             {
                 float ratio = (float)assmtField.currentValue / (float)assmtField.targetValue;
                 //Debug.Log("Ratio: " + ratio);
                 if (ratio > 0.5)
                 {
-                    fieldTextColor = Color.yellow;
+                    fieldTextColor = new Color32(67, 67, 0, 255);
                 } else if (ratio > 0)
                 {
-                    fieldTextColor = new Color32(255, 90, 0, 255);
+                    fieldTextColor = new Color32(67, 38, 0, 255);
                     
                 }
             }

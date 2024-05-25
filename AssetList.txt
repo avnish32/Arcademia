@@ -1,1 +1,7 @@
 2D Dungeon Pixel Art Tileset by Zhivko Minchev https://assetstore.unity.com/packages/2d/environments/2d-dungeon-pixel-art-tileset-171343
+
+Player art and animation from 3 Direction NPC Characters by Szadi Art https://assetstore.unity.com/packages/2d/characters/3-direction-npc-characters-205182
+
+Original art created using www.pixilart.com
+
+Font: Retro Gaming by Daymarius from www.dafont.com
