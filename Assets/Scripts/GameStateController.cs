@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class GameStateController : MonoBehaviour
@@ -8,7 +9,10 @@ public class GameStateController : MonoBehaviour
     GameObject[] lifeIcons;
 
     [SerializeField]
-    GameObject losePanel;
+    GameObject losePanel, waveClearPanel, winPanel;
+
+    [SerializeField]
+    TextMeshProUGUI waveClearMsg;
     
     private int livesLeft = 3, maxLives = 5;
     public bool isGamePaused = false;
@@ -17,6 +21,9 @@ public class GameStateController : MonoBehaviour
     void Start()
     {
         losePanel.SetActive(false);
+        winPanel.SetActive(false);
+        waveClearPanel.SetActive(false);
+
         int i;
         for (i = 0; i < livesLeft; i++)
         {
@@ -65,5 +72,22 @@ public class GameStateController : MonoBehaviour
         lifeIcons[livesLeft-1].gameObject.SetActive(true);
     }
 
+    public void OnWaveCompleted(string waveCompletionMsg)
+    {
+        PauseGame();
+        waveClearMsg.text = waveCompletionMsg;
+        waveClearPanel.SetActive(true);
+    }
 
+    public void OnWin()
+    {
+        PauseGame();
+        winPanel.SetActive(true);
+    }
+
+    public void OnContinueAfterWaveCleared()
+    {
+        waveClearPanel.SetActive(false);
+        ResumeGame();
+    }
 }

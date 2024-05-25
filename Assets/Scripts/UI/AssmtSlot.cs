@@ -70,7 +70,10 @@ public class AssmtSlot : MonoBehaviour
 
     public void UpdateUI(S_Assignment assignment)
     {
-        timerText.text = "0:" + assignment.timeRemaining;
+        int minsLeft = assignment.timeRemaining / 60;
+        int secsLeft = assignment.timeRemaining % 60;
+        
+        timerText.text = string.Format("{0}:{1}", minsLeft.ToString("00"), secsLeft.ToString("00"));
         
         //var fieldTextSlots = fieldsPanel.GetComponentsInChildren<TextMeshProUGUI>();
         //Debug.Log("Updating slot UI, field text slots count: " + fieldTextSlots.Length+" | assignment field count: "+ assignment.fields.Count);

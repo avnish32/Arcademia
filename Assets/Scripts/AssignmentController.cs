@@ -7,13 +7,16 @@ using ResearchArcade;
 public class AssignmentController : MonoBehaviour
 {
     [SerializeField]
+    S_AssignmentWaveData[] assignmentWaveData;
+
+    [SerializeField]
     S_AssignmentFieldData[] assignmentFieldData;
 
     [SerializeField]
     int minSpawnInterval, maxSpawnInterval;
 
     [SerializeField]
-    int minAssmtLifetime, maxAssmtLifetime;
+    int minAssmtSecsPerTarget, maxAssmtSecsPerTarget;
 
     [SerializeField]
     int activeAssmtQSize;
@@ -23,33 +26,40 @@ public class AssignmentController : MonoBehaviour
 
     int minFields=2;
     private Dictionary<E_AssignmentFields, S_AssignmentFieldData> assignmentFieldToFieldDataMap;
+    private Dictionary<int, S_AssignmentWaveData> assmtWaveToWaveDataMap;
     private List<S_Assignment> assmtQ;
     private int activeAssignmentIndex;
-    private GameStateController playerStatsController;
+    private GameStateController gameStateController;
     private bool areAssmtsBeingSpawned = true;
+    private int currentWave = -1, assmtsSpawnedInCurrentWave=0;
 
     private void Awake()
     {
-        playerStatsController = FindObjectOfType<GameStateController>();
+        gameStateController = FindObjectOfType<GameStateController>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        assignmentFieldToFieldDataMap = new Dictionary<E_AssignmentFields, S_AssignmentFieldData>();
         assmtQ = new List<S_Assignment>();
 
+        assignmentFieldToFieldDataMap = new Dictionary<E_AssignmentFields, S_AssignmentFieldData>();
         foreach (S_AssignmentFieldData fieldDatum in assignmentFieldData)
         {
             assignmentFieldToFieldDataMap[fieldDatum.field] = fieldDatum;
+        }
+
+        assmtWaveToWaveDataMap = new Dictionary<int, S_AssignmentWaveData>();
+        for (int i = 0; i<assignmentWaveData.Length; i++)
+        {
+            assmtWaveToWaveDataMap[i] = assignmentWaveData[i];
         }
         
         activeAssignmentIndex = 0;
         ChangeActiveAssmt();
 
         //InvokeRepeating("SpawnAssignment", 3f, 5f);
-        SpawnAssmtAndUpdateUI();
-        StartCoroutine(SpawnAssignmentRepeatedly());
+        StartNewWave();
         InvokeRepeating("UpdateAssmtTimers", 0f, 1f);
     }
 
@@ -62,12 +72,23 @@ public class AssignmentController : MonoBehaviour
         }
     }
 
+    private void StartNewWave()
+    {
+        currentWave++;
+        assmtsSpawnedInCurrentWave = 0;
+        SpawnAssmtAndUpdateUI();
+        StartCoroutine(SpawnAssignmentRepeatedly());
+    }
     private IEnumerator SpawnAssignmentRepeatedly()
     {
         areAssmtsBeingSpawned = true;
-        while (assmtQ.Count < activeAssmtQSize)
+        while (assmtQ.Count < activeAssmtQSize && assmtsSpawnedInCurrentWave < assmtWaveToWaveDataMap[currentWave].numAssmts)
         {
             yield return new WaitForSeconds(UnityEngine.Random.Range(minSpawnInterval, maxSpawnInterval + 1));
+            if (gameStateController.isGamePaused)
+            {
+                continue;
+            }
             SpawnAssmtAndUpdateUI();
         }
         areAssmtsBeingSpawned = false;
@@ -86,14 +107,22 @@ public class AssignmentController : MonoBehaviour
         List<S_AssignmentFieldData> assignmentFields = new List<S_AssignmentFieldData> ();
         List<E_AssignmentFields> availableFields = new List<E_AssignmentFields>(assignmentFieldToFieldDataMap.Keys);
 
-        int numFields = UnityEngine.Random.Range(minFields, assignmentFieldToFieldDataMap.Count+1);
+        int numFields = assignmentFieldToFieldDataMap.Count;
+        if (currentWave < assmtWaveToWaveDataMap.Count-1)
+        {
+            numFields = UnityEngine.Random.Range(minFields, assignmentFieldToFieldDataMap.Count + 1);
+        }
+         
+        int totalTarget = 0;
 
         for (int i = 0; i < numFields; i++)
         {
             E_AssignmentFields randomField = availableFields[UnityEngine.Random.Range (0, availableFields.Count)];
             
             S_AssignmentFieldData fieldData = assignmentFieldToFieldDataMap[randomField];
-            fieldData.targetValue = UnityEngine.Random.Range(fieldData.minValue, fieldData.maxValue+1);
+            fieldData.targetValue = (int)Mathf.Ceil(UnityEngine.Random.Range(fieldData.minValue, fieldData.maxValue+1)
+                * assmtWaveToWaveDataMap[currentWave].assmtFieldMaxValModifier);
+            totalTarget += fieldData.targetValue;
             fieldData.currentValue = 0;
             assignmentFields.Add(fieldData);
 
@@ -101,9 +130,10 @@ public class AssignmentController : MonoBehaviour
         }
 
         assignment.fields = assignmentFields;
-        assignment.timeRemaining = UnityEngine.Random.Range(minAssmtLifetime, maxAssmtLifetime + 1);
+        assignment.timeRemaining = UnityEngine.Random.Range(minAssmtSecsPerTarget*totalTarget, (maxAssmtSecsPerTarget + 1)*totalTarget);
 
         //DisplayAssignmentData(assignment);
+        assmtsSpawnedInCurrentWave++;
         return assignment;
     }
 
@@ -137,7 +167,8 @@ public class AssignmentController : MonoBehaviour
             if (currentAssmt.timeRemaining <= 0)
             {
                 RemoveAssmt(currentAssmt);
-                playerStatsController.ReduceLife();
+                gameStateController.ReduceLife();
+                CheckForWaveEnd();
             }
         }
     }
@@ -145,7 +176,9 @@ public class AssignmentController : MonoBehaviour
     private void RemoveAssmt(S_Assignment assignment)
     {
         assmtQ.Remove(assignment);
-        activeAssignmentIndex = Mathf.Clamp(--activeAssignmentIndex, 0, assmtQ.Count - 1);
+        activeAssignmentIndex = assmtQ.Count <= 0 ? 0 : --activeAssignmentIndex;
+        activeAssignmentIndex = activeAssignmentIndex < 0 ? 0 : activeAssignmentIndex;
+        //activeAssignmentIndex = Mathf.Clamp(--activeAssignmentIndex, 0, assmtQ.Count - 1);
         UpdateAssmtUI();
         if (!areAssmtsBeingSpawned)
         {
@@ -163,6 +196,11 @@ public class AssignmentController : MonoBehaviour
             }
         }
         return true;
+    }
+
+    private bool IsCurrentWaveCompleted()
+    {
+        return assmtQ.Count <= 0 && assmtsSpawnedInCurrentWave >= assmtWaveToWaveDataMap[currentWave].numAssmts;
     }
 
     public void UpdateAssmtUI()
@@ -203,9 +241,27 @@ public class AssignmentController : MonoBehaviour
         {
             //change here for submission desk
             RemoveAssmt(assignment);
-        } else
+            CheckForWaveEnd();
+        }
+        else
         {
             assmtSlots[activeAssignmentIndex].UpdateUI(assignment);
+        }
+    }
+
+    private void CheckForWaveEnd()
+    {
+        if (IsCurrentWaveCompleted())
+        {
+            if (currentWave >= assmtWaveToWaveDataMap.Count - 1)
+            {
+                gameStateController.OnWin();
+            }
+            else
+            {
+                gameStateController.OnWaveCompleted(assmtWaveToWaveDataMap[currentWave].waveCompletionMsg);
+                StartNewWave();
+            }
         }
     }
 
