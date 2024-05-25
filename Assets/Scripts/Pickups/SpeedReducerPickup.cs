@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class SpeedReducerPickup : Pickable
 {
+    [SerializeField]
+    AudioClip enemyPickupSound;
+
     private float maxLifetimeSecs = 5f;
 
     // Start is called before the first frame update
@@ -29,7 +32,9 @@ public class SpeedReducerPickup : Pickable
     {
         PlayerMovement playerMovement = FindObjectOfType<PlayerMovement>();
         playerMovement.OnSpeedReducerPickup();
-        
+
+        FindObjectOfType<AudioSource>().PlayOneShot(enemyPickupSound);
+
         Destroy(gameObject);
     }
 

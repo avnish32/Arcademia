@@ -171,6 +171,7 @@ MonoBehaviour:
   minPickupValue: 1
   maxPickupValue: 3
   pickupValueText: {fileID: 5571950238939660847}
+  assmtPickupSound: {fileID: 8300000, guid: f9ce0bd536f6f4244b7151c5ba3c341e, type: 3}
 --- !u!95 &-2640916026381591416
 Animator:
   serializedVersion: 5

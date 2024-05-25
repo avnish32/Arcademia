@@ -13,6 +13,12 @@ public class GameStateController : MonoBehaviour
 
     [SerializeField]
     TextMeshProUGUI waveClearMsg;
+
+    [SerializeField]
+    AudioSource audioSource;
+
+    [SerializeField]
+    AudioClip lostClip;
     
     private int livesLeft = 3, maxLives = 5;
     public bool isGamePaused = false;
@@ -61,6 +67,7 @@ public class GameStateController : MonoBehaviour
 
         if(livesLeft <=0)
         {
+            audioSource.PlayOneShot(lostClip);
             PauseGame();
             losePanel.SetActive(true);
         }

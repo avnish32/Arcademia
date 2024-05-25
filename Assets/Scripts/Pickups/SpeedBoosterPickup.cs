@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class SpeedBoosterPickup : Pickable
 {
+    [SerializeField]
+    AudioClip powerupPickupSound;
+
     private float maxLifetimeSecs = 5f;
 
     // Start is called before the first frame update
@@ -29,6 +32,7 @@ public class SpeedBoosterPickup : Pickable
     {
         PlayerMovement playerMovement = FindObjectOfType<PlayerMovement>();
         playerMovement.OnSpeedBoosterPickup();
+        FindObjectOfType<AudioSource>().PlayOneShot(powerupPickupSound);
 
         Destroy(gameObject);
     }

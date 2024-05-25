@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class AssessmentCompleterPickup : Pickable
 {
+    [SerializeField]
+    AudioClip powerupPickupSound;
+
     private float maxLifetimeSecs = 5f;
 
     // Start is called before the first frame update
@@ -36,6 +39,7 @@ public class AssessmentCompleterPickup : Pickable
             activeAssmt.fields[i] = currentField;
         }
         assignmentController.SetActiveAssmt(activeAssmt);
+        FindObjectOfType<AudioSource>().PlayOneShot(powerupPickupSound);
 
         Destroy(gameObject);
     }

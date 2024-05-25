@@ -5,14 +5,19 @@ using UnityEngine;
 public class MainMenuController : MonoBehaviour
 {
     [SerializeField]
-    GameObject creditsPanel;
+    GameObject creditsPanel, htpPanel, titlePanel, infoPanel;
     
     private GameObject activePanel;
 
     // Start is called before the first frame update
     void Start()
     {
+        titlePanel.SetActive(true);
+        infoPanel.SetActive(true);
+        activePanel = infoPanel;
+
         creditsPanel.SetActive(false);
+        htpPanel.SetActive(false);
     }
 
     // Update is called once per frame
@@ -27,7 +32,19 @@ public class MainMenuController : MonoBehaviour
         {
             activePanel.SetActive(false);
         }
+        titlePanel.SetActive(true);
         creditsPanel.SetActive(true);
         activePanel = creditsPanel;
+    }
+
+    public void OnHTPButtonClicked()
+    {
+        if (activePanel != null)
+        {
+            activePanel.SetActive(false);
+        }
+        titlePanel.SetActive(false);
+        htpPanel.SetActive(true);
+        activePanel = htpPanel;
     }
 }

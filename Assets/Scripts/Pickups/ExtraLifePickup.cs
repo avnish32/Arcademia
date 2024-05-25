@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class ExtraLifePickup : Pickable
 {
+    [SerializeField]
+    AudioClip powerupPickupSound;
+
     private float maxLifetimeSecs = 5f;
 
     // Start is called before the first frame update
@@ -28,6 +31,7 @@ public class ExtraLifePickup : Pickable
     {
         GameStateController playerStatsController = FindObjectOfType<GameStateController>();
         playerStatsController.AddLife();
+        FindObjectOfType<AudioSource>().PlayOneShot(powerupPickupSound);
         
         Destroy(gameObject);
     }

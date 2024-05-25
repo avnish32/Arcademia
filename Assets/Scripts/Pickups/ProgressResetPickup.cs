@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class ProgressResetPickup : Pickable
 {
+    [SerializeField]
+    AudioClip enemyPickupSound;
+
     private float maxLifetimeSecs = 5f;
 
     // Start is called before the first frame update
@@ -37,6 +40,7 @@ public class ProgressResetPickup : Pickable
         }
         assignmentController.SetActiveAssmt(activeAssmt);
 
+        FindObjectOfType<AudioSource>().PlayOneShot(enemyPickupSound);
         Destroy(gameObject);
     }
 

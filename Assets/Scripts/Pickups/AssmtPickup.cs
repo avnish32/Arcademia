@@ -12,6 +12,9 @@ public class AssmtPickup : Pickable
     [SerializeField]
     TextMeshProUGUI pickupValueText;
 
+    [SerializeField]
+    AudioClip assmtPickupSound;
+
     private int pickupValue; 
     private float maxLifetimeSecs=10f;
 
@@ -51,6 +54,7 @@ public class AssmtPickup : Pickable
         }
 
         assignmentController.SetActiveAssmt(activeAssmt);
+        FindObjectOfType<AudioSource>().PlayOneShot(assmtPickupSound);
         Destroy(gameObject);
     }
 

@@ -18,7 +18,11 @@ public class AssmtSlot : MonoBehaviour
     [SerializeField]
     S_FieldIconData[] fieldIconData;
 
+    [SerializeField]
+    AudioClip assmtCompletedClip;
+
     private Dictionary<E_AssignmentFields, Sprite> fieldToIconMap;
+    private AudioSource audioSource;
 
     private void Awake()
     {
@@ -41,6 +45,8 @@ public class AssmtSlot : MonoBehaviour
         {
             fieldSlot.gameObject.SetActive(false);
         }
+
+        audioSource = FindObjectOfType<AudioSource>();
     }
 
     // Start is called before the first frame update
@@ -145,6 +151,11 @@ public class AssmtSlot : MonoBehaviour
     {
         if (IsAssmtCompleted(assignment))
         {
+            if (audioSource == null)
+            {
+                audioSource = FindObjectOfType<AudioSource>();
+            }
+            audioSource.PlayOneShot(assmtCompletedClip);
             Debug.Log("assmt slot changed itself to green.");
             GetComponent<Image>().color = new Color32(122, 255, 93, 255); //green
         }

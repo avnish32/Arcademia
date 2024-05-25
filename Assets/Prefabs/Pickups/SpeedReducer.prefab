@@ -82,6 +82,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f758a076b24b1884ea78f0e97b9cc643, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyPickupSound: {fileID: 8300000, guid: c25aaf5e0305b4fdcb0a67237a8106e0, type: 3}
 --- !u!95 &7595289888431873369
 Animator:
   serializedVersion: 5

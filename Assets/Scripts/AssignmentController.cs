@@ -24,6 +24,12 @@ public class AssignmentController : MonoBehaviour
     [SerializeField]
     List<AssmtSlot> assmtSlots;
 
+    [SerializeField]
+    private AudioSource audioSource;
+
+    [SerializeField]
+    AudioClip assmtSubmittedClip, waveEndClip, winClip, assmtMissedClip;
+
     int minFields=2;
     private Dictionary<E_AssignmentFields, S_AssignmentFieldData> assignmentFieldToFieldDataMap;
     private Dictionary<int, S_AssignmentWaveData> assmtWaveToWaveDataMap;
@@ -37,6 +43,7 @@ public class AssignmentController : MonoBehaviour
     {
         //Debug.Log("Inside awake of Assmt controller.");
         gameStateController = FindObjectOfType<GameStateController>();
+        audioSource = FindObjectOfType<AudioSource>();
     }
 
     // Start is called before the first frame update
@@ -178,6 +185,7 @@ public class AssignmentController : MonoBehaviour
 
             if (currentAssmt.timeRemaining <= 0)
             {
+                audioSource.PlayOneShot(assmtMissedClip);
                 RemoveAssmt(currentAssmt);
                 gameStateController.ReduceLife();
                 CheckForWaveEnd();
@@ -257,10 +265,12 @@ public class AssignmentController : MonoBehaviour
         {
             if (currentWave >= assmtWaveToWaveDataMap.Count - 1)
             {
+                audioSource.PlayOneShot(winClip);
                 gameStateController.OnWin();
             }
             else
             {
+                audioSource.PlayOneShot(waveEndClip);
                 gameStateController.OnWaveCompleted(assmtWaveToWaveDataMap[currentWave].waveCompletionMsg);
                 StartNewWave();
             }
@@ -292,6 +302,7 @@ public class AssignmentController : MonoBehaviour
         {
             if (IsAssmtCompleted(assmtQ[i]))
             {
+                audioSource.PlayOneShot(assmtSubmittedClip);
                 RemoveAssmt(assmtQ[i]);
                 CheckForWaveEnd();
             }
