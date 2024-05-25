@@ -236,17 +236,7 @@ public class AssignmentController : MonoBehaviour
     public void SetActiveAssmt(S_Assignment assignment)
     {
         assmtQ[activeAssignmentIndex] = assignment;
-        
-        if (IsAssmtCompleted(assignment))
-        {
-            //change here for submission desk
-            RemoveAssmt(assignment);
-            CheckForWaveEnd();
-        }
-        else
-        {
-            assmtSlots[activeAssignmentIndex].UpdateUI(assignment);
-        }
+        assmtSlots[activeAssignmentIndex].UpdateUI(assignment);
     }
 
     private void CheckForWaveEnd()
@@ -277,5 +267,23 @@ public class AssignmentController : MonoBehaviour
             assmtSlots[i].SetInactiveSlot();
         }
         assmtSlots[activeAssignmentIndex].SetActiveSlot();
+    }
+
+    public List<S_Assignment> GetAssmtQ()
+    {
+        return assmtQ;
+    }
+
+    public void SubmitCompletedAssmts()
+    {
+        for (int i=assmtQ.Count-1; i>=0; i--)
+        {
+            if (IsAssmtCompleted(assmtQ[i]))
+            {
+                RemoveAssmt(assmtQ[i]);
+                CheckForWaveEnd();
+            }
+        }
+        
     }
 }

@@ -22,11 +22,21 @@ public class UIInteraction : MonoBehaviour
     {
         if (ArcadeInput.Player1.JoyUp.Down)
         {
-            currentActiveButton = Mathf.Clamp(--currentActiveButton, 0, buttons.Length-1);
+            int nextActiveButton = Mathf.Clamp(currentActiveButton-1, 0, buttons.Length-1);
+            while (nextActiveButton > -1 && !buttons[nextActiveButton].gameObject.activeInHierarchy)
+            {
+                nextActiveButton = Mathf.Clamp(nextActiveButton - 1, 0, buttons.Length - 1);
+            }
+            currentActiveButton = nextActiveButton>-1?nextActiveButton:currentActiveButton;
             UpdateHighlightedButton();
         } else if (ArcadeInput.Player1.JoyDown.Down)
         {
-            currentActiveButton = Mathf.Clamp(++currentActiveButton, 0, buttons.Length - 1);
+            int nextActiveButton = Mathf.Clamp(currentActiveButton + 1, 0, buttons.Length - 1);
+            while (nextActiveButton < buttons.Length && !buttons[nextActiveButton].gameObject.activeInHierarchy)
+            {
+                nextActiveButton = Mathf.Clamp(nextActiveButton + 1, 0, buttons.Length - 1);
+            }
+            currentActiveButton = nextActiveButton < buttons.Length ? nextActiveButton : currentActiveButton;
             UpdateHighlightedButton();
         } else if (ArcadeInput.Player1.Start.Down)
         {
@@ -46,5 +56,11 @@ public class UIInteraction : MonoBehaviour
             }
             buttons[i].RemoveHighlight();
         }
+    }
+
+    public void SetActiveButton(int buttonIndex)
+    {
+        currentActiveButton = buttonIndex;
+        UpdateHighlightedButton();
     }
 }

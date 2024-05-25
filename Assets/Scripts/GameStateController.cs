@@ -42,13 +42,13 @@ public class GameStateController : MonoBehaviour
         
     }
 
-    private void PauseGame()
+    public void PauseGame()
     {
         Time.timeScale = 0f;
         isGamePaused = true;
     }
 
-    private void ResumeGame()
+    public void ResumeGame()
     {
         Time.timeScale = 1f;
         isGamePaused = false;
@@ -90,4 +90,10 @@ public class GameStateController : MonoBehaviour
         waveClearPanel.SetActive(false);
         ResumeGame();
     }
+
+    /*public void OnGoingBackFromSubmission()
+    {
+        submissionPanel.SetActive(false);
+        ResumeGame();
+    }*/
 }

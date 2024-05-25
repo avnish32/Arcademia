@@ -1,10 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class SceneController : MonoBehaviour
+public class SubmissionPanel : MonoBehaviour
 {
+    [SerializeField]
+    public ArcadeButton[] assmtButtons;
+
+    [SerializeField]
+    public ArcadeButton backButton;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -16,11 +21,4 @@ public class SceneController : MonoBehaviour
     {
         
     }
-
-    public void LoadSameScene()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
-
-
 }
