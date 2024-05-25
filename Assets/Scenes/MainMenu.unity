@@ -4293,7 +4293,10 @@ MonoBehaviour:
 
 
     Free vector icons set of home furniture by macrovector
-    on freepik.com'
+    on freepik.com
+
+
+    Arcade SFX Free by Red Sky Sounds: https://assetstore.unity.com/packages/audio/sound-fx/arcade-sfx-free-42983'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6fea9673bdd7d1744b9d3df7ce74d226, type: 2}
   m_sharedMaterial: {fileID: 8668990558128945121, guid: 6fea9673bdd7d1744b9d3df7ce74d226, type: 2}
@@ -4387,7 +4390,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1663429566
 RectTransform:
   m_ObjectHideFlags: 0
