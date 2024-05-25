@@ -13,11 +13,13 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 movementInput;
     private float speedModifier = 1f;
     private Animator animator;
+    private GameStateController gameStateController;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        gameStateController = FindObjectOfType<GameStateController>();
     }
 
     // Start is called before the first frame update
@@ -51,12 +53,25 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (gameStateController.isGamePaused)
+        {
+            return;
+        }
+
+        if (ArcadeInput.Exit.Down)
+        {
+            Debug.Log("Exit pressed.");
+            Navigation.ExitGame();
+        } else if (ArcadeInput.Player1.Start.Down)
+        {
+            gameStateController.OnGamePaused();
+        }
     }
 
     private void FixedUpdate()
     {
         //rb.velocity = movementInput * movementSpeed * Time.fixedDeltaTime;
+        
 
         if (ResearchArcade.ArcadeInput.Player1.JoyDown.HeldDown)
         {

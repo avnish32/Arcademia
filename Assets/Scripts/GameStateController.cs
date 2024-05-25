@@ -9,7 +9,7 @@ public class GameStateController : MonoBehaviour
     GameObject[] lifeIcons;
 
     [SerializeField]
-    GameObject losePanel, waveClearPanel, winPanel;
+    GameObject losePanel, waveClearPanel, winPanel, pausePanel;
 
     [SerializeField]
     TextMeshProUGUI waveClearMsg;
@@ -23,6 +23,7 @@ public class GameStateController : MonoBehaviour
         losePanel.SetActive(false);
         winPanel.SetActive(false);
         waveClearPanel.SetActive(false);
+        pausePanel.SetActive(false);
 
         int i;
         for (i = 0; i < livesLeft; i++)
@@ -89,6 +90,18 @@ public class GameStateController : MonoBehaviour
     {
         waveClearPanel.SetActive(false);
         ResumeGame();
+    }
+
+    public void OnGamePaused()
+    {
+        PauseGame();
+        pausePanel.SetActive(true);
+    }
+
+    public void OnGameResumed()
+    {
+        pausePanel.SetActive(false);
+        ResumeGame();        
     }
 
     /*public void OnGoingBackFromSubmission()
