@@ -110,6 +110,7 @@ MonoBehaviour:
     fieldIcon: {fileID: 21300000, guid: 0fc7cef21821d6747b9dc31f161dd823, type: 3}
   - field: 3
     fieldIcon: {fileID: 21300000, guid: 67e9616454728d44e8584e0cee98f776, type: 3}
+  assmtCompletedClip: {fileID: 8300000, guid: f1bb7f130aca54db7a1b409a8f88b841, type: 3}
 --- !u!1 &3503495291424879899
 GameObject:
   m_ObjectHideFlags: 0

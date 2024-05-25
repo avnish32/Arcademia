@@ -250,7 +250,14 @@ public class AssignmentController : MonoBehaviour
 
     public S_Assignment GetActiveAssmt()
     {
-        return assmtQ[activeAssignmentIndex];
+        if (assmtQ.Count > 0 && activeAssignmentIndex >= 0)
+        {
+            return assmtQ[activeAssignmentIndex];
+        }
+        else
+        {
+            return new S_Assignment();
+        }
     }
 
     public void SetActiveAssmt(S_Assignment assignment)

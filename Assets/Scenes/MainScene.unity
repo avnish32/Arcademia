@@ -5488,7 +5488,7 @@ MonoBehaviour:
       it's still not over. Gotta complete your dissertation/thesis next, haven't
       you?
   - numAssmts: 1
-    assmtFieldMaxValModifier: 4
+    assmtFieldMaxValModifier: 5
     minAssmtSecsPerTarget: 5
     maxAssmtSecsPerTarget: 8
     waveCompletionMsg: Congratulations! Your resubmissions were successful. However,

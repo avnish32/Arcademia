@@ -32,6 +32,14 @@ public class AssessmentCompleterPickup : Pickable
     {
         AssignmentController assignmentController = FindObjectOfType<AssignmentController>();
         S_Assignment activeAssmt = assignmentController.GetActiveAssmt();
+
+        if (activeAssmt.fields == null || activeAssmt.fields.Count <= 0)
+        {
+            FindObjectOfType<AudioSource>().PlayOneShot(powerupPickupSound);
+            Destroy(gameObject);
+            return;
+        }
+
         for (int i = 0; i < activeAssmt.fields.Count; i++)
         {
             var currentField = activeAssmt.fields[i];
