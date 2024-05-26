@@ -7,6 +7,7 @@ public class SpeedReducerPickup : Pickable
     [SerializeField]
     AudioClip enemyPickupSound;
 
+    [SerializeField]
     private float maxLifetimeSecs = 5f;
 
     // Start is called before the first frame update

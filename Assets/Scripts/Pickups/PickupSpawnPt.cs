@@ -34,7 +34,7 @@ public class PickupSpawnPt : MonoBehaviour
     public bool CanSpawn()
     {
         float distanceFromPlayer = Vector2.Distance(player.transform.position, transform.position);
-        return pickupAtThisPt == null && distanceFromPlayer > 1f;
+        return pickupAtThisPt == null && distanceFromPlayer > 2f;
     }
 
 }

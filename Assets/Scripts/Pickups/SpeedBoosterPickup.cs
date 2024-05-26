@@ -7,6 +7,7 @@ public class SpeedBoosterPickup : Pickable
     [SerializeField]
     AudioClip powerupPickupSound;
 
+    [SerializeField]
     private float maxLifetimeSecs = 5f;
 
     // Start is called before the first frame update

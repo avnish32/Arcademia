@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ProgressResetPickup : Pickable
+public class ProgressResetPickup_Tut : Pickable
 {
     [SerializeField]
     AudioClip enemyPickupSound;
@@ -31,7 +31,7 @@ public class ProgressResetPickup : Pickable
 
     public override void Pick()
     {
-        AssignmentController assignmentController = FindObjectOfType<AssignmentController>();
+        AssignmentController_Tut assignmentController = FindObjectOfType<AssignmentController_Tut>();
         S_Assignment activeAssmt = assignmentController.GetActiveAssmt();
 
         if (activeAssmt.fields == null || activeAssmt.fields.Count <= 0)

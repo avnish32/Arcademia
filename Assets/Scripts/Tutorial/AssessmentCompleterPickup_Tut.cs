@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ProgressResetPickup : Pickable
+public class AssessmentCompleterPickup_Tut : Pickable
 {
     [SerializeField]
-    AudioClip enemyPickupSound;
+    AudioClip powerupPickupSound;
 
     [SerializeField]
     private float maxLifetimeSecs = 5f;
@@ -13,8 +13,8 @@ public class ProgressResetPickup : Pickable
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(DestroyAfterLifetime());
         //Destroy(gameObject, maxLifetimeSecs);
+        StartCoroutine(DestroyAfterLifetime());
     }
 
     // Update is called once per frame
@@ -31,25 +31,25 @@ public class ProgressResetPickup : Pickable
 
     public override void Pick()
     {
-        AssignmentController assignmentController = FindObjectOfType<AssignmentController>();
+        AssignmentController_Tut assignmentController = FindObjectOfType<AssignmentController_Tut>();
         S_Assignment activeAssmt = assignmentController.GetActiveAssmt();
 
         if (activeAssmt.fields == null || activeAssmt.fields.Count <= 0)
         {
-            FindObjectOfType<AudioSource>().PlayOneShot(enemyPickupSound);
+            FindObjectOfType<AudioSource>().PlayOneShot(powerupPickupSound);
             Destroy(gameObject);
             return;
         }
 
-        for (int i = 0; i<activeAssmt.fields.Count; i++)
+        for (int i = 0; i < activeAssmt.fields.Count; i++)
         {
             var currentField = activeAssmt.fields[i];
-            currentField.currentValue = 0;
+            currentField.currentValue = currentField.targetValue;
             activeAssmt.fields[i] = currentField;
         }
         assignmentController.SetActiveAssmt(activeAssmt);
+        FindObjectOfType<AudioSource>().PlayOneShot(powerupPickupSound);
 
-        FindObjectOfType<AudioSource>().PlayOneShot(enemyPickupSound);
         Destroy(gameObject);
     }
 

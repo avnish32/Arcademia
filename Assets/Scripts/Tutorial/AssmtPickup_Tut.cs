@@ -15,13 +15,20 @@ public class AssmtPickup_Tut : Pickable
     [SerializeField]
     AudioClip assmtPickupSound;
 
-    private int pickupValue;
+    [SerializeField]
+    SpriteRenderer pointer;
+
+    [SerializeField]
     private float maxLifetimeSecs = 10f;
+
+    private int pickupValue;
     private TutorialController tutorialController;
 
     // Start is called before the first frame update
     void Start()
     {
+        tutorialController = FindObjectOfType<TutorialController>();
+
         pickupValue = UnityEngine.Random.Range(minPickupValue, maxPickupValue + 1);
         pickupValueText.text = string.Format("x{0}", pickupValue);
 
@@ -88,5 +95,10 @@ public class AssmtPickup_Tut : Pickable
             tutorialController.OnPickupNotCollected.Invoke();
         }
         Destroy(gameObject);
+    }
+
+    public void DisablePtr()
+    {
+        pointer.enabled =false;
     }
 }

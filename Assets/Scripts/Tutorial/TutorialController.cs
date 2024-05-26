@@ -11,12 +11,12 @@ public class TutorialController : MonoBehaviour
     private TextMeshProUGUI msgText, continueText;
 
     [SerializeField]
-    private GameObject assmtQPointer, timerPtr, livesAndScorePtr,
+    private GameObject assmtQPointer, livesAndScorePtr,
         socsDeskPtr;
 
     [SerializeField] 
     private GameObject slidePickup, reportPgPickup1, reportPgPickup2,
-        videoClipPickup1, videoClipPickup2, presPickup;
+        videoClipPickup1, videoClipPickup2, codePickup;
 
     [SerializeField]
     private GameObject speedReducer, progressResetter;
@@ -30,7 +30,10 @@ public class TutorialController : MonoBehaviour
     [SerializeField]
     PickupSpawner_Tut pickupSpawner;
 
-    private Action[] actions;
+    [SerializeField]
+    SceneController sceneController;
+
+    private List<Action> actions;
     private List<GameObject> allPickups; 
     private int nextActionToExec = 0;
     private bool canContinue = false;
@@ -42,11 +45,17 @@ public class TutorialController : MonoBehaviour
     void Start()
     {
         allPickups = new List<GameObject>() {slidePickup, reportPgPickup1, reportPgPickup2,
-        videoClipPickup1, videoClipPickup2, presPickup };        
+        videoClipPickup1, videoClipPickup2, codePickup };        
 
         assmtQPointer.SetActive(false);
-        timerPtr.SetActive(false);
-        actions[0] = Welcome;
+        livesAndScorePtr.SetActive(false);
+        socsDeskPtr.SetActive(false);
+
+        actions = new List<Action>() { Welcome, AssmtComponents, PresSlide,
+        ReportPgs, Lives, TwoAssmts, ChangingAssmtUseful, ChooseCorrectAssmt,
+        ProgressResetter, SpeedBooster, ExtraLife, AssmtCompleter,
+        PauseAndExit, ThatsIt, LoadMainMenu};
+        
 
         canContinue = true;
         ContinueTutorial();
@@ -73,7 +82,6 @@ public class TutorialController : MonoBehaviour
 
     private void Welcome()
     {
-        assmtQPointer.SetActive(true);
         assmtController.SpawnFirstAssignment();
         msgText.text = "Welcome to Assessment Training! On the right are the assessments that you need to complete.";
     }
@@ -88,6 +96,7 @@ public class TutorialController : MonoBehaviour
     private void PresSlide()
     {
         CanUserContinue(false);
+        assmtQPointer.SetActive(false);
         pickupSpawner.SpawnPickup(slidePickup);
         msgText.text = "Here's 2 presentation slides. Use the Player 1 joystick and walk over it to collect before it disappears!";
         OnPickupCollected = PresSlideUpdatedOnAssmt;
@@ -111,7 +120,7 @@ public class TutorialController : MonoBehaviour
         assmtQPointer.SetActive(false);
         pickupSpawner.SpawnPickup(reportPgPickup1);
         pickupSpawner.SpawnPickup(reportPgPickup2);
-        msgText.text = "You might need to collect the same item multiple times to complete the assessment, such as these report pages.";
+        msgText.text = "You might need to collect the same type of item multiple times to complete the assessment, such as these report pages.";
 
         OnPickupCollected = () =>
         {
@@ -134,12 +143,14 @@ public class TutorialController : MonoBehaviour
     {
         CanUserContinue(false);
         OnPickupCollected = OnPickupNotCollected = null;
+        socsDeskPtr.SetActive(true);
         msgText.text = "Great! The assessment is now completed. It will keep beeping to remind you to submit. Walk over to the SoCS Submission desk to submit it.";
         OnAssmtSubmitted = Timer;
     }
 
     private void Timer()
     {
+        socsDeskPtr.SetActive(false);
         OnAssmtSubmitted = null;
         CanUserContinue(true);
         msgText.text = "Good job. Keep in mind that if you fail to submit an assessment before its timer runs out, you'll lose one life.";
@@ -198,6 +209,11 @@ public class TutorialController : MonoBehaviour
         OnPickupCollected = OnPickupNotCollected = null;
 
         msgText.text = "Nice. This way you can ensure that the collected item reaches the correct assessment. Try to complete and submit both these assessments now.";
+        foreach (var pickup in allPickups)
+        {
+            pickup.GetComponent<AssmtPickup_Tut>().DisablePtr();
+        }
+        
         pickupSpawner.StartSpawningPickups(allPickups);
 
         OnAssmtSubmitted = () =>
@@ -216,7 +232,7 @@ public class TutorialController : MonoBehaviour
 
         pickupSpawner.StopSpawningPickups();
         lastPickupSpawned = pickupSpawner.SpawnPickup(speedReducer);
-        msgText.text = "Occasionally, you will see some red pickups like this one. This has a pink tortoise on it (poor choice of colors, I know), and it" +
+        msgText.text = "Occasionally, you will see some red pickups like this one. This has a pink tortoise on it (poor choice of colors, I know), and it " +
             "will reduce your speed for a short while.";
     }
 
@@ -272,7 +288,10 @@ public class TutorialController : MonoBehaviour
         msgText.text = "And that is it for the tutorial! Good luck on your assessment training, hope you have fun!";
     }
 
-
+    private void LoadMainMenu()
+    {
+        sceneController.LoadMainMenu();
+    }
 
     private void CanUserContinue(bool canThey)
     {

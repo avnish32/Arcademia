@@ -1,3 +1,4 @@
+using ResearchArcade;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.VersionControl;
@@ -12,7 +13,7 @@ public class AssignmentController_Tut : MonoBehaviour
     private AudioSource audioSource;
 
     [SerializeField]
-    AudioClip assmtSubmittedClip;
+    AudioClip assmtSubmittedClip, assmtMissedClip;
 
     [SerializeField]
     GameStateController gameStateController;
@@ -20,20 +21,23 @@ public class AssignmentController_Tut : MonoBehaviour
     [SerializeField]
     TutorialController tutorialController;
 
-    private List<S_Assignment> assmtQ;
+    private List<S_Assignment> assmtQ = new List<S_Assignment>();
     private int activeAssignmentIndex;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        InvokeRepeating("UpdateAssmtTimers", 0f, 1f);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (ArcadeInput.Player1.A.Down)
+        {
+            ChangeActiveAssmt();
+        }
     }
 
     private void SpawnAssmtAndUpdateUI(S_Assignment assmtToSpawn)
@@ -58,6 +62,30 @@ public class AssignmentController_Tut : MonoBehaviour
         return score;
     }
 
+    private void UpdateAssmtTimers()
+    {
+        if (assmtQ.Count <= 0)
+        {
+            return;
+        }
+
+        for (int i = 0; i < assmtQ.Count; i++)
+        {
+            var currentAssmt = assmtQ[i];
+            currentAssmt.timeRemaining -= 1;
+            //Debug.Log("i: "+i+" | "+currentAssmt.timeRemaining);
+            assmtQ[i] = currentAssmt;
+            assmtSlots[i].UpdateUI(currentAssmt);
+
+            if (currentAssmt.timeRemaining <= 0)
+            {
+                audioSource.PlayOneShot(assmtMissedClip);
+                RemoveAssmt(currentAssmt);
+                gameStateController.ReduceLife();
+            }
+        }
+    }
+
     private void RemoveAssmt(S_Assignment assignment)
     {
         assmtQ.Remove(assignment);
@@ -65,6 +93,20 @@ public class AssignmentController_Tut : MonoBehaviour
         activeAssignmentIndex = activeAssignmentIndex < 0 ? 0 : activeAssignmentIndex;
         //activeAssignmentIndex = Mathf.Clamp(--activeAssignmentIndex, 0, assmtQ.Count - 1);
         UpdateAssmtUI();
+    }
+
+    private void ChangeActiveAssmt()
+    {
+        if (++activeAssignmentIndex >= assmtQ.Count)
+        {
+            activeAssignmentIndex = 0;
+        }
+
+        for (int i = 0; i < assmtQ.Count; i++)
+        {
+            assmtSlots[i].SetInactiveSlot();
+        }
+        assmtSlots[activeAssignmentIndex].SetActiveSlot();
     }
 
     public void UpdateAssmtUI()
