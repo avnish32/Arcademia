@@ -24,10 +24,11 @@ public class PickupSpawnPt : MonoBehaviour
         
     }
 
-    public void SpawnPickup(GameObject pickup)
+    public GameObject SpawnPickup(GameObject pickup)
     {
         //Debug.Log("Pickup spawned.");
         pickupAtThisPt = Instantiate(pickup, transform.position, Quaternion.identity);
+        return pickupAtThisPt;
     }
 
     public bool CanSpawn()

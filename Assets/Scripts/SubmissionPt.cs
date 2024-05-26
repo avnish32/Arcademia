@@ -7,6 +7,9 @@ public class SubmissionPt : MonoBehaviour
     [SerializeField]
     SubmissionPanel submissionPanel;
 
+    [SerializeField]
+    private TutorialController tutorialController;
+
     private AssignmentController assignmentController;
     private List<S_Assignment> assmtQ;
 
@@ -36,6 +39,11 @@ public class SubmissionPt : MonoBehaviour
 
 
         assignmentController.SubmitCompletedAssmts();
+
+        if (tutorialController != null && tutorialController.OnAssmtSubmitted != null)
+        {
+            tutorialController.OnAssmtSubmitted.Invoke();
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
