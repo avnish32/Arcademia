@@ -64,7 +64,7 @@ public class TutorialController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (ArcadeInput.Player1.B.Down)
+        if (ArcadeInput.Player1.B.Down || Input.GetKeyDown(KeyCode.B))
         {
             ContinueTutorial();
         }
@@ -98,7 +98,7 @@ public class TutorialController : MonoBehaviour
         CanUserContinue(false);
         assmtQPointer.SetActive(false);
         pickupSpawner.SpawnPickup(slidePickup);
-        msgText.text = "Here's 2 presentation slides. Use the Player 1 joystick and walk over it to collect before it disappears!";
+        msgText.text = "Here's 2 presentation slides. Use the Player 1 joystick or keyboard's arrow keys and walk over it to collect before it disappears!";
         OnPickupCollected = PresSlideUpdatedOnAssmt;
         OnPickupNotCollected = () =>
         {
@@ -168,7 +168,7 @@ public class TutorialController : MonoBehaviour
         livesAndScorePtr.SetActive(false);
         assmtController.SpawnSecondAssignment();
         assmtController.SpawnThirdAssignment();
-        msgText.text = "There are a couple of new assessments in the list. You can choose which assessment to work on using Player 1's 'A' key.";
+        msgText.text = "There are a couple of new assessments in the list. You can choose which assessment to work on using Player 1's 'A' key or 'Z' key on the keyboard.";
     }
 
     private void ChangingAssmtUseful()
@@ -280,7 +280,8 @@ public class TutorialController : MonoBehaviour
 
     private void PauseAndExit()
     {
-        msgText.text = "You can press 'Start' at any time to pause the game, and 'Exit' To exit the game.";
+        msgText.text = "You can press 'Start' (or 'Enter' on a keyboard) at any time to pause the game and also to press buttons, " +
+            "and 'Exit' (or 'Q' on keyboard) to exit the game.";
     }
 
     private void ThatsIt()

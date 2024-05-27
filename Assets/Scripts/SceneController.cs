@@ -33,6 +33,11 @@ public class SceneController : MonoBehaviour
         SceneManager.LoadScene("MainMenu");
     }
 
+    public void LoadTutorial()
+    {
+        SceneManager.LoadScene("Tutorial");
+    }
+
     public void QuitGame()
     {
         ResearchArcade.Navigation.ExitGame();
